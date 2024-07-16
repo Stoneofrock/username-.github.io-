@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统测PDF查看</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>统测PDF查看</h1>
+        <select id="yearSelect">
+            <option value="">请选择年份</option>
+            <option value="113">113年</option>
+            <option value="112">112年</option>
+            <option value="111">111年</option>
+        </select>
+        <table id="pdfTable" style="display:none;">
+            <tr>
+                <th>科目</th>
+                <th>试题</th>
+                <th>答案</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        const yearSelect = document.getElementById('yearSelect');
+        const pdfTable = document.getElementById('pdfTable');
+        const subjects = ['国文', '英文', '数学A', '数学B', '数学C'];
+        const pdfUrl = "https://exam2.tcte.edu.tw/EXAM/113_4y/downloader.php?obj=MTEzLTR5LTAwLW1jLnBkZg==";
+
+        yearSelect.addEventListener('change', function() {
+            const year = this.value;
+            if (year) {
+                pdfTable.style.display = 'table';
+                pdfTable.innerHTML = `
+                    <tr>
+                        <th>科目</th>
+                        <th>试题</th>
+                        <th>答案</th>
+                    </tr>
+                    ${subjects.map(subject => {
+                        let questionLink = '';
+                        let questionText = '暂无链接';
+                        
+                        if (year === '113' && subject === '数学C') {
+                            questionLink = pdfUrl;
+                            questionText = '查看试题PDF';
+                        }
+
+                        return `
+                        <tr>
+                            <td>${subject}</td>
+                            <td>${questionLink ? `<a href="${questionLink}" target="_blank">${questionText}</a>` : questionText}</td>
+                            <td>暂无链接</td>
+                        </tr>
+                    `}).join('')}
+                `;
+            } else {
+                pdfTable.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
